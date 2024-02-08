@@ -19,7 +19,6 @@ export class AuthController {
         }
     }
 
-
     @Post('signup')
     async callsignup() {
         return this.authService.signup();
