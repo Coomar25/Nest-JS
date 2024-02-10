@@ -1,7 +1,8 @@
 // type @controller and hit enter
-import { Controller, Post } from "@nestjs/common";
+import { Body, Controller, Post, Req } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-
+import { Request } from "express";
+import { AuthDto } from "./dto";
 @Controller('/auth')
 
 export class AuthController {
@@ -20,7 +21,8 @@ export class AuthController {
     }
 
     @Post('signup')
-    async callsignup() {
+    async callsignup(@Body() dto: any) {
+        console.log("🚀 ~ AuthController ~ callsignup ~ dto:", dto);
         return this.authService.signup();
     }
 
