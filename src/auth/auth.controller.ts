@@ -1,5 +1,5 @@
 // type @controller and hit enter
-import { Body, Controller, Post, Req } from "@nestjs/common";
+import { Body, Controller, ParseIntPipe, Post, Req } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Request } from "express";
 import { AuthDto } from "./dto";
@@ -20,10 +20,10 @@ export class AuthController {
         }
     }
 
+    // dto stands for data transfer object which is used to validate the incoming data from the client side 
     @Post('signup')
-    async callsignup(@Body() dto: any) {
-        console.log("🚀 ~ AuthController ~ callsignup ~ dto:", dto);
-        return this.authService.signup();
+    async callsignup(@Body() dto: AuthDto) {
+        return this.authService.signup(dto);
     }
 
     @Post('siginin')
