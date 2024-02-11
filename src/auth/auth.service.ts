@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { AuthDto } from "./dto";
+import { AuthDto, SigninDto } from "./dto";
 import * as argon from "argon2";
 import { ResponseEnum } from "src/contstants/enum";
 @Injectable()
@@ -34,17 +34,22 @@ export class AuthService {
                 status: 201,
                 message: ResponseEnum.SUCCESS,
             })
-        } catch (err) {
-            return ({
-                status: 500,
-                message: ResponseEnum.SERVER_ERROR,
-                data: err
-            })
+        } catch (error) {
+            //throw error from a prisma client for the dublicate value
+            if (error.code === "P2002") {
+                throw new ForbiddenException("User already exists")
+            }
+
+            // return ({
+            //     status: 500,
+            //     message: ResponseEnum.SERVER_ERROR,
+            //     data: error
+            // })
         }
     }
 
     // login if the dto.password matches with the password in the database which is hashed
-    async signin(dto: AuthDto) {
+    async signin(dto: SigninDto) {
         try {
             const user = await this.prisma.user.findUnique({
                 where: {
@@ -55,11 +60,11 @@ export class AuthService {
                 return ({
                     status: 401,
                     message: ResponseEnum.UNAUTHORIZED,
-                    data: "Invalid Credential"
                 });
             }
             const isPasswordValid = await argon.verify(user.password, dto.password);
             if (!isPasswordValid) {
+                // throw new ForbiddenException(ResponseEnum.INVALID_CREDENTIAL)
                 return ({
                     status: 401,
                     message: ResponseEnum.UNAUTHORIZED,
@@ -69,14 +74,17 @@ export class AuthService {
             return ({
                 status: 200,
                 message: ResponseEnum.SUCCESS,
-                data: "Login Successful"
-            })
-        } catch (err) {
-            return ({
-                status: 500,
-                message: ResponseEnum.SERVER_ERROR,
-                data: err
-            })
+                data: user
+            });
+        } catch (error) {
+            if (error.code === "P2002") {
+                throw new ForbiddenException("User already exists")
+            }
+            // return ({
+            //     status: 500,
+            //     message: ResponseEnum.SERVER_ERROR,
+            //     data: error
+            // })
         }
     }
 

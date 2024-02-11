@@ -2,7 +2,7 @@
 import { Body, Controller, ParseIntPipe, Post, Req } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Request } from "express";
-import { AuthDto } from "./dto";
+import { AuthDto, SigninDto } from "./dto";
 @Controller('/auth')
 
 export class AuthController {
@@ -27,7 +27,7 @@ export class AuthController {
     }
 
     @Post('siginin')
-    async signin(@Body() dto: AuthDto) {
+    async signin(@Body() dto: SigninDto) {
         return this.authService.signin(dto);
     }
 }
