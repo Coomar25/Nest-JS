@@ -8,3 +8,12 @@ export enum ResponseEnum {
     SESSION_EXPIRED = "Session Expired",
     CONFLICT = "Conflict",
 }
+
+
+export enum RoleEnum {
+    ADMIN = "Admin",
+    STUDENT = "Student",
+    TEACHER = "Teacher",
+    PARENT = "Parent",
+    SUPER = "Super",
+}

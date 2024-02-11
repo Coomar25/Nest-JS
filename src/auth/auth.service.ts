@@ -2,11 +2,22 @@ import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AuthDto, SigninDto } from "./dto";
 import * as argon from "argon2";
-import { ResponseEnum } from "src/contstants/enum";
+import { ResponseEnum, RoleEnum } from "src/contstants/enum";
+import { JwtService } from "@nestjs/jwt";
+import { config } from "src/config/config";
 @Injectable()
 
 export class AuthService {
-    constructor(private prisma: PrismaService) { }
+    constructor(
+        private prisma: PrismaService,
+        private jwt: JwtService
+    ) { }
+
+    async signToken(id: number, role: string) {
+        const payload = { id, role };
+        return this.jwt.sign(payload, config.TOKEN.access);
+    }
+
 
     async signup(dto: AuthDto) {
         try {
@@ -23,7 +34,7 @@ export class AuthService {
                 });
             }
             const hashedPassword = await argon.hash(dto.password);
-            const newUser = await this.prisma.user.create({
+            await this.prisma.user.create({
                 data: {
                     email: dto.email,
                     password: hashedPassword
@@ -71,10 +82,12 @@ export class AuthService {
                     data: "Invalid Credential"
                 });
             }
+
+            const access = await this.signToken(user.id, RoleEnum.STUDENT);
             return ({
                 status: 200,
                 message: ResponseEnum.SUCCESS,
-                data: user
+                access: access
             });
         } catch (error) {
             // if (error.code === "P2002") {
