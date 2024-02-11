@@ -77,14 +77,14 @@ export class AuthService {
                 data: user
             });
         } catch (error) {
-            if (error.code === "P2002") {
-                throw new ForbiddenException("User already exists")
-            }
-            // return ({
-            //     status: 500,
-            //     message: ResponseEnum.SERVER_ERROR,
-            //     data: error
-            // })
+            // if (error.code === "P2002") {
+            //     throw new ForbiddenException("User already exists")
+            // }
+            return ({
+                status: 500,
+                message: ResponseEnum.SERVER_ERROR,
+                data: error
+            })
         }
     }
 
