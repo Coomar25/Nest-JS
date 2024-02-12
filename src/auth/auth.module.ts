@@ -4,6 +4,7 @@ import { AuthService } from "./auth.service";
 import { PrismaModule } from "src/prisma/prisma.module";
 import { JwtModule } from "@nestjs/jwt";
 import { config } from "../config/config";
+import { JwtStrategy } from "./strategy";
 
 @Module({
     // imports: [PrismaModule], // doing this need to import every time in every module
@@ -11,7 +12,7 @@ import { config } from "../config/config";
         secret: config.TOKEN.access.secret,
     })],
     controllers: [AuthController],
-    providers: [AuthService]
+    providers: [AuthService, JwtStrategy]
 })
 export class AuthModule { }
 

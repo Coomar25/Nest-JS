@@ -13,7 +13,7 @@ export class AuthService {
         private jwt: JwtService
     ) { }
 
-    async signToken(id: number, role: string) {
+    async signToken(id: number, role: string): Promise<string> {
         const payload = { id, role };
         return this.jwt.sign(payload, config.TOKEN.access);
     }
