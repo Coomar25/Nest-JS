@@ -12,12 +12,10 @@ export class AuthService {
         private prisma: PrismaService,
         private jwt: JwtService
     ) { }
-
     async signToken(id: number, role: string): Promise<string> {
         const payload = { id, role };
         return this.jwt.sign(payload, config.TOKEN.access);
     }
-
 
     async signup(dto: AuthDto) {
         try {
@@ -46,7 +44,6 @@ export class AuthService {
                 message: ResponseEnum.SUCCESS,
             })
         } catch (error) {
-            //throw error from a prisma client for the dublicate value
             if (error.code === "P2002") {
                 throw new ForbiddenException("User already exists")
             }

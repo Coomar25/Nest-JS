@@ -1,5 +1,5 @@
 import { access } from "fs";
-
+import { PrismaService } from "src/prisma/prisma.service";
 
 export const config = {
     TOKEN: {
@@ -18,5 +18,6 @@ export const config = {
             user: process.env.APP_EMAIL,
             pass: process.env.APP_EMAIL_PASSWORD
         }
-    }
+    },
+    PRISMA_CLIENT: PrismaService
 }
