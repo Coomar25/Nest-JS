@@ -1,8 +1,6 @@
-import { Body, Controller, Get, Req, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { request } from 'http';
-import { AuthDto } from 'src/auth/dto';
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
+import { JwtGuard } from 'src/auth/guard';
 
 @Controller('users')
 export class UserController {
@@ -11,7 +9,7 @@ export class UserController {
     ) { }
 
     @Get('me')
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(JwtGuard)
     async callGetMeFunc(@Req() req: any) {
         console.log("🚀 ~ UserController ~ callGetMeFunc ~ req.user:", req.user);
         return this.userService.getMeFunc(req.user);
