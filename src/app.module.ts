@@ -11,7 +11,7 @@ import { ConfigModule } from '@nestjs/config';
     AuthModule,
     UserModule,
     BookmarkModule,
-    PrismaModule
+    PrismaModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}
